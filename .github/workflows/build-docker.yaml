@@ -13,10 +13,12 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
       - name: build image
         run: |
-          docker build ./api/ -t 100foldtechnologies/capstone:latest
-          docker build ./front-end-nextjs/ -t 100foldtechnologies/capstone:latest
+          docker build ./api/ -t 100foldtechnologies/capstone:backend
+          docker build ./front-end-nextjs/ -t 100foldtechnologies/capstone:frontend
+
       - name: push image to docker hub
         run: |
           docker login -u 100foldtechnologies -p ${{ secrets.DOCKER_HUB_TOKEN }}
