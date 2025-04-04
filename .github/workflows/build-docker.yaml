@@ -17,8 +17,8 @@ jobs:
 
       - name: build image
         run: |
-          docker build ./api/ -t 100foldtechnologies/capstone:backend
-          docker build ./front-end-nextjs/ -t 100foldtechnologies/capstone:frontend
+          docker build ./api/ -t 100foldtechnologies/capstone:latest
+          docker build ./front-end-nextjs/ -t 100foldtechnologies/capstone:latest
 
       - name: push image to docker hub
         run: |
