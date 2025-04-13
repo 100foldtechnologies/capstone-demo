@@ -15,6 +15,38 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: Set up Git user
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+
+      - name: Generate next release tag
+        id: tag
+        run: |
+          # Get latest tag or start fresh
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
+          echo "Latest tag: $latest_tag"
+
+          if [[ "$latest_tag" =~ ^v([0-9]+)\.([0-9]+)\.([0-9]+)$ ]]; then
+            major=${BASH_REMATCH[1]}
+            minor=${BASH_REMATCH[2]}
+            patch=${BASH_REMATCH[3]}
+            patch=$((patch + 1))
+            new_tag="v$major.$minor.$patch"
+          else
+            new_tag="v1.0.0"
+          fi
+
+          # Check if tag already exists
+          if git ls-remote --tags origin | grep -q "refs/tags/$new_tag$"; then
+            echo "Tag $new_tag already exists on remote. Exiting."
+            exit 1
+          fi
+
+          echo "new_tag=$new_tag" >> $GITHUB_OUTPUT
+          git tag "$new_tag"
+          git push origin "$new_tag"
+
       - name: build image
         run: |
           docker build ./api/ -t 100foldtechnologies/capstone:latest
