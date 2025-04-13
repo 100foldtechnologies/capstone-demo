@@ -57,11 +57,11 @@ jobs:
 
       - name: build image
         run: |
-          docker build ./api/ -t 100foldtechnologies/capstone:${{ steps.tag.outputs.new_tag }}
-          docker build ./front-end-nextjs/ -t 100foldtechnologies/capstone:frontend
+          docker build ./api/ -t 100foldtechnologies/capstone:backend-${{ steps.tag.outputs.new_tag }}
+          docker build ./front-end-nextjs/ -t 100foldtechnologies/capstone:frontend-${{ steps.tag.outputs.new_tag }}
 
       - name: push image to docker hub
         run: |
           docker login -u 100foldtechnologies -p ${{ secrets.DOCKER_HUB_TOKEN }}
-          docker push 100foldtechnologies/capstone:${{ steps.tag.outputs.new_tag }}
-          docker push 100foldtechnologies/capstone:frontend
+          docker push 100foldtechnologies/capstone:backend-${{ steps.tag.outputs.new_tag }}
+          docker push 100foldtechnologies/capstone:frontend-${{ steps.tag.outputs.new_tag }}
